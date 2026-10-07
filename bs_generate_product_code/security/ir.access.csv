@@ -1,0 +1,8 @@
+id,name,model_id,group_id/id,operation,domain
+access_product_code_rule_user,product.code.rule.user,product.code.rule,base.group_user,r,
+access_product_code_rule_manager,product.code.rule.manager,product.code.rule,stock.group_stock_manager,crud,
+access_product_code_rule_line_user,product.code.rule.line.user,product.code.rule.line,base.group_user,r,
+access_product_code_rule_line_manager,product.code.rule.line.manager,product.code.rule.line,stock.group_stock_manager,crud,
+access_product_code_history_user,product.code.history.user,product.code.history,base.group_user,r,
+access_product_code_preview_user,product.code.preview.user,product.code.preview,base.group_user,crud,
+access_product_code_preview_line_user,product.code.preview.line.user,product.code.preview.line,base.group_user,crud,

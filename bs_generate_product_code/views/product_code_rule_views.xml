@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_code_rule_view_form" model="ir.ui.view">
+        <field name="name">product.code.rule.form</field>
+        <field name="model">product.code.rule</field>
+        <field name="arch" type="xml">
+            <form string="Product Code Rule">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Panel Codes"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="freeze_policy"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="example" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <separator string="Apply To"/>
+                    <field name="product_domain" nolabel="1"
+                           widget="domain" options="{'model': 'product.product'}"/>
+
+                    <separator string="Reference Parts"/>
+                    <div class="text-muted mb8">
+                        Parts are joined top to bottom. <strong>Prefix</strong> and
+                        <strong>Suffix</strong> wrap only their own part, and a part
+                        that finds no value is skipped entirely, prefix and suffix
+                        included.
+                    </div>
+                    <field name="line_ids" nolabel="1">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="value_type" string="Source" width="160px"/>
+                            <field name="res_model" column_invisible="1"/>
+                            <field name="field_path" string="Field"
+                                   widget="product_code_field_selector"
+                                   options="{'model': 'res_model', 'follow_relations': True}"
+                                   invisible="value_type != 'field'"/>
+                            <field name="text" string="Text" width="160px"
+                                   invisible="value_type != 'text'"/>
+                            <field name="prefix" width="112px"/>
+                            <field name="suffix" width="112px"/>
+                            <field name="is_multi_value" column_invisible="1"/>
+                            <field name="separate_with" string="Separate With"
+                                   width="144px"
+                                   invisible="not is_multi_value"/>
+                            <field name="transform" width="192px"
+                                   invisible="value_type == 'number'"/>
+                            <field name="length" width="96px"
+                                   invisible="value_type != 'number' and transform not in ('truncate', 'pad')"/>
+                            <field name="start_number" width="96px"
+                                   invisible="value_type != 'number'"/>
+                        </list>
+                    </field>
+
+                    <separator string="How To Use"/>
+                    <div style="max-width: 1180px;">
+
+                        <div class="row g-3 mt-1">
+                            <div class="col-lg-5">
+                                <div class="card border-0 h-100" style="background:#f8f9fb;">
+                                    <div class="card-body">
+                                        <div class="text-uppercase text-muted small fw-bold mb-3">Sources</div>
+
+                                        <div class="mb-3">
+                                            <span class="badge text-bg-primary mb-2">Product Field</span>
+                                            <div class="text-muted">
+                                                Any field of the product, following relations &#8211;
+                                                <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">Product Category &#8250; Name</span>.
+                                                A path that crosses a list contributes every value it
+                                                finds, so <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">Attribute Values &#8250; Attribute Value &#8250; Code</span>
+                                                gives all attribute codes in attribute order.
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <span class="badge text-bg-secondary mb-2">Fixed Text</span>
+                                            <div class="text-muted">
+                                                Used exactly as typed &#8211; a separator, a company
+                                                initial, a year.
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <span class="badge text-bg-secondary mb-2">Running Number</span>
+                                            <div class="text-muted">
+                                                Keeps references unique. Products whose other parts
+                                                come out the same are numbered one after another,
+                                                padded to <strong>Length</strong> &#8211;
+                                                <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">DEM-18-001</span>,
+                                                <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">DEM-18-002</span>.
+                                                One per rule.
+                                            </div>
+                                        </div>
+
+                                        <div class="pt-2 border-top text-muted">
+                                            <strong>Prefix</strong> and <strong>Suffix</strong> wrap the
+                                            whole part. <strong>Separate With</strong> goes between its
+                                            values. The <strong>Transform</strong> is applied to each
+                                            value before they are joined.
+                                            <div class="mt-2">
+                                                A part that finds no value is skipped entirely &#8211;
+                                                prefix and suffix included.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-7">
+                                <div class="card border-0 h-100" style="background:#f8f9fb;">
+                                    <div class="card-body">
+                                        <div class="text-uppercase text-muted small fw-bold mb-3">Transforms</div>
+                                        <table class="table table-sm table-borderless align-middle mb-0">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="ps-0" style="width: 11rem;">As is</td>
+                                                    <td style="width: 11rem;"><span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">18 mm</span></td>
+                                                    <td class="pe-0 text-muted small">already reads the way you want</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="ps-0">UPPERCASE</td>
+                                                    <td><span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">ply</span><span class="text-muted mx-1">&#8594;</span><span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">PLY</span></td>
+                                                    <td class="pe-0 text-muted small">one casing, however it was typed</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="ps-0">lowercase</td>
+                                                    <td><span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">PLY</span><span class="text-muted mx-1">&#8594;</span><span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">ply</span></td>
+                                                    <td class="pe-0 text-muted small">codes that must stay lower case</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="ps-0">Digits only</td>
+                                                    <td><span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">18 mm</span><span class="text-muted mx-1">&#8594;</span><span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">18</span></td>
+                                                    <td class="pe-0 text-muted small">dropping units from a measurement</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="ps-0">First characters
+                                                        <span class="badge text-bg-secondary">Length</span></td>
+                                                    <td><span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">Demo Panels</span><span class="text-muted mx-1">&#8594;</span><span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">Dem</span></td>
+                                                    <td class="pe-0 text-muted small">shortening a long name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="ps-0">Pad with zeros
+                                                        <span class="badge text-bg-secondary">Length</span></td>
+                                                    <td><span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">18</span><span class="text-muted mx-1">&#8594;</span><span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">0018</span></td>
+                                                    <td class="pe-0 text-muted small">fixed width, so codes sort right</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card border-0 mt-3" style="background:#f8f9fb;">
+                            <div class="card-body">
+                                <div class="text-uppercase text-muted small fw-bold mb-3">What each field type contributes</div>
+                                <table class="table table-sm table-borderless align-middle mb-0">
+                                    <tbody>
+                                        <tr>
+                                            <td class="ps-0" style="width: 12rem;">Text, Description</td>
+                                            <td class="pe-0 text-muted">Markup and line breaks removed &#8211; a
+                                                line break would break reports and exports.
+                                                <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">Nice &lt;b&gt;chair&lt;/b&gt;</span><span class="text-muted mx-1">&#8594;</span><span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">Nice chair</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-0">Date, Date &amp; Time</td>
+                                            <td class="pe-0 text-muted">Compact digits, so a year or month can be
+                                                built into a code.
+                                                <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">2026-09-01 01:56</span><span class="text-muted mx-1">&#8594;</span><span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">20260901</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-0">Number</td>
+                                            <td class="pe-0 text-muted">As written, decimal point and all &#8211;
+                                                <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">12.5</span>. Use <em>Digits only</em> for
+                                                <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">125</span>. A whole number loses its
+                                                <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">.0</span>.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-0">Selection</td>
+                                            <td class="pe-0 text-muted">The stored value rather than the label,
+                                                since that is the code-like one:
+                                                <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">consu</span>, not <em>Goods</em>.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-0">Linked record</td>
+                                            <td class="pe-0 text-muted">Its display name, unless you follow the
+                                                relation to a field of your own choosing.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-0">Yes / No</td>
+                                            <td class="pe-0 text-muted">Contributes nothing &#8211; the part is
+                                                skipped entirely.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ps-0">Empty value</td>
+                                            <td class="pe-0 text-muted">Contributes nothing, so a blank field never
+                                                leaves a stray separator behind.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="card border-0 mt-3" style="background:#f8f9fb;">
+                            <div class="card-body">
+                                <div class="text-uppercase text-muted small fw-bold mb-2">Dates in Prefix, Suffix and Fixed Text</div>
+                                <div class="text-muted mb-3">
+                                    Filled from the day the product was created, in the time zone of
+                                    the user who created it, so a reference does not change with the
+                                    calendar. With a Running Number, numbering starts again for each
+                                    date:
+                                    <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">P%%(year)s-</span> gives
+                                    <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">P2026-001</span>, then
+                                    <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">P2027-001</span> a year later.
+                                </div>
+                                <div class="row g-3">
+                                        <div class="col-md-6 col-xl-3">
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">Year with century</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(year)s</span></div>
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">Year without century</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(y)s</span></div>
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">Month</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(month)s</span></div>
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">Day</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(day)s</span></div>
+                                        </div>
+                                        <div class="col-md-6 col-xl-3">
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">Day of the year</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(doy)s</span></div>
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">Week of the year</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(woy)s</span></div>
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">Day of the week (0 = Sunday)</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(weekday)s</span></div>
+                                        </div>
+                                        <div class="col-md-6 col-xl-3">
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">Hour, 00 to 24</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(h24)s</span></div>
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">Hour, 00 to 12</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(h12)s</span></div>
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">Minute</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(min)s</span></div>
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">Second</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(sec)s</span></div>
+                                        </div>
+                                        <div class="col-md-6 col-xl-3">
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">ISO 8601 week year</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(isoyear)s</span></div>
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">ISO 8601 week year without century</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(isoy)s</span></div>
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="text-muted">ISO 8601 week number</span><span class="font-monospace small px-1 rounded text-nowrap" style="background:#eceef3;color:#3c3c5c;">%%(isoweek)s</span></div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2 mt-3 p-3 rounded"
+                             style="background:#eef3ff;">
+                            <span class="text-uppercase text-muted small fw-bold">Worked example</span>
+                            <span class="text-muted">
+                                Category <em>First characters 3</em> + suffix
+                                <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">-</span>, then the attribute values with
+                                <em>Digits only</em> separated by <span class="font-monospace small px-1 rounded" style="background:#eceef3;color:#3c3c5c;">/</span>
+                            </span>
+                            <span class="text-muted mx-1">&#8594;</span>
+                            <span class="font-monospace fw-bold">Dem-12/1220</span>
+                        </div>
+                    </div>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_code_rule_view_tree" model="ir.ui.view">
+        <field name="name">product.code.rule.list</field>
+        <field name="model">product.code.rule</field>
+        <field name="arch" type="xml">
+            <list string="Product Code Rules">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="product_domain" string="Apply To" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_product_code_rule" model="ir.actions.act_window">
+        <field name="name">Product Code Rules</field>
+        <field name="res_model">product.code.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Build your first code rule</p>
+            <p>A rule says which products it covers, then lists the parts that make
+               up their internal reference: a product field, fixed text or a
+               running number - each with its own prefix, suffix and formatting.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_product_code_rule"
+              name="Product Code Rules"
+              parent="stock.menu_product_in_config_stock"
+              action="action_product_code_rule"
+              sequence="90"/>
+
+</odoo>

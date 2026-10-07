@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_print_labels_stock_lot" model="ir.actions.server">
+        <field name="name">Custom Labels</field>
+        <field name="model_id" ref="stock.model_stock_lot"/>
+        <field name="binding_model_id" ref="stock.model_stock_lot"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="group_ids" eval="[(6, 0, [ref('base.group_user')])]"/>
+        <field name="state">code</field>
+        <field name="code">action = env["bs.label.print.wizard"]._action_open(records)</field>
+    </record>
+
+    <record id="action_print_labels_stock_picking" model="ir.actions.server">
+        <field name="name">Custom Labels</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="group_ids" eval="[(6, 0, [ref('base.group_user')])]"/>
+        <field name="state">code</field>
+        <field name="code">action = env["bs.label.print.wizard"]._action_open(records)</field>
+    </record>
+
+    <!-- Inventory > Products > Print Labels: the dialog without a selection. -->
+    <record id="action_print_labels_blank" model="ir.actions.server">
+        <field name="name">Print Labels</field>
+        <field name="model_id" ref="bs_product_label.model_bs_label_print_wizard"/>
+        <field name="group_ids" eval="[(6, 0, [ref('stock.group_stock_user')])]"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open_blank()</field>
+    </record>
+
+    <menuitem id="menu_print_labels"
+              name="Print Labels"
+              parent="stock.menu_stock_inventory_control"
+              action="action_print_labels_blank"
+              groups="stock.group_stock_user"
+              sequence="200"/>
+
+</odoo>

@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+access_product_attribute_report_stock,product.attribute.report.stock,bs.product.attribute.report,stock.group_stock_user,r,
+access_product_attribute_report_sale,product.attribute.report.sale,bs.product.attribute.report,sales_team.group_sale_salesman,r,
+product_attribute_report_company_rule,product.attribute.report multi-company,bs.product.attribute.report,,r,"[('company_id', 'in', company_ids)]"

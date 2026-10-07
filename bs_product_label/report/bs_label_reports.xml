@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- One action per output. They take their page size from the profile
+         being printed (ir.actions.report.get_paperformat), not from here. -->
+    <record id="action_report_label_pdf" model="ir.actions.report">
+        <field name="name">Labels</field>
+        <field name="model">product.product</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bs_product_label.label_document</field>
+        <field name="print_report_name">'Labels'</field>
+    </record>
+
+    <record id="action_report_label_html" model="ir.actions.report">
+        <field name="name">Labels</field>
+        <field name="model">product.product</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bs_product_label.label_document</field>
+    </record>
+
+    <record id="action_report_label_zpl" model="ir.actions.report">
+        <field name="name">Labels</field>
+        <field name="model">product.product</field>
+        <field name="report_type">qweb-text</field>
+        <field name="report_name">bs_product_label.label_document_zpl</field>
+        <field name="print_report_name">'Labels'</field>
+    </record>
+
+</odoo>

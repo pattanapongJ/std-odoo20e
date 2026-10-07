@@ -1,0 +1,98 @@
+<section class="oe_container" style="max-width: 1080px; margin: 0 auto; color: #243340; font-family: Arial, sans-serif; line-height: 1.6;">
+    <div style="padding: 48px 32px; background-color: #f4f1f4; border-radius: 16px; text-align: center;">
+        <p style="margin: 0 0 12px; color: #714b67; font-weight: 700; letter-spacing: 2px;">ODOO 20 &#183; INVENTORY</p>
+        <h1 style="margin: 0 0 16px; font-size: 40px; color: #3b2a37;">Product Code Generator</h1>
+        <p style="margin: 0; font-size: 21px;">Build each variant's internal reference from the fields it already has.</p>
+        <p style="max-width: 720px; margin: 16px auto 0;">A code rule says which products it covers, then lists the parts of their reference in order: a product field, fixed text or a running number, each with its own prefix, suffix and formatting.</p>
+    </div>
+
+    <div class="row" style="margin: 24px 0 0;">
+        <div class="col-md-4" style="padding: 16px;">
+            <h2 style="font-size: 21px; color: #714b67;">Rules, not typing</h2>
+            <p>References follow the product: category, attribute values, its creation date or any field reachable from the variant.</p>
+        </div>
+        <div class="col-md-4" style="padding: 16px;">
+            <h2 style="font-size: 21px; color: #714b67;">Unique by design</h2>
+            <p>A Running Number keeps equal references apart, and a Duplicate References filter finds the ones that already clash.</p>
+        </div>
+        <div class="col-md-4" style="padding: 16px;">
+            <h2 style="font-size: 21px; color: #714b67;">Safe to apply</h2>
+            <p>Bulk generation shows a preview first. Typed references and references already printed or sent are left alone unless you tick them, and every change is recorded.</p>
+        </div>
+    </div>
+
+    <div style="padding: 24px 16px;">
+        <h2 style="color: #3b2a37;">Define a code rule</h2>
+        <p>Open <strong>Inventory &#8250; Configuration &#8250; Products &#8250; Product Code Rules</strong>. <strong>Apply To</strong> selects the products; <strong>Reference Parts</strong> are joined top to bottom. <strong>Example</strong> shows what the rule builds for the first product it matches.</p>
+        <img src="screens/rule_form.png" alt="Code rule with a category part, an attribute part and a running number" style="display: block; width: 100%; height: auto; border: 1px solid #e3dde2; border-radius: 8px;"/>
+        <p style="color: #596773; font-size: 14px;">Here the category is cut to three letters, the attribute values keep only their digits, and a three-digit running number follows: <code>Dem-12/1220-001</code>.</p>
+    </div>
+
+    <div style="padding: 32px; margin-top: 8px; border: 1px solid #e3dde2; border-radius: 12px;">
+        <h2 style="margin-top: 0; color: #3b2a37;">Parts of a reference</h2>
+        <div class="table-responsive">
+            <table class="table" style="width: 100%;">
+                <thead><tr><th>Source</th><th>What it adds</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Product Field</strong></td><td>Any field of the variant, following relations. A path through a list, such as attribute values, adds every value it finds, joined by <strong>Separate With</strong>.</td></tr>
+                    <tr><td><strong>Fixed Text</strong></td><td>Used as typed: a company initial, a separator. It may hold date placeholders, such as <code>%(year)s</code>.</td></tr>
+                    <tr><td><strong>Running Number</strong></td><td>Counts per reference: products whose other parts come out the same are numbered one after another, padded to <strong>Length</strong>, from <strong>Start At</strong>. One per rule.</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p style="margin-bottom: 0;">Each part can be transformed - UPPERCASE, lowercase, digits only, first characters, pad with zeros - and a part that finds no value is skipped with its prefix and suffix. A running number next to a part that can end in a digit needs a Prefix such as <code>-</code>, so <code>DEM-18</code> and <code>DEM-180</code> never share a sequence.</p>
+        <p style="margin-bottom: 0;">A field path is checked when the rule is saved. If a field disappears later, for example because its module is uninstalled, products under that rule keep their reference. They do not get a shorter one. The rule's <strong>Example</strong> shows which field it cannot read.</p>
+    </div>
+
+    <div style="padding: 24px 16px; margin-top: 16px;">
+        <h2 style="color: #3b2a37;">Dates in a reference</h2>
+        <p><strong>Prefix</strong>, <strong>Suffix</strong> and <strong>Fixed Text</strong> accept the placeholders of Odoo's sequences, such as <code>%(year)s</code>, <code>%(y)s</code>, <code>%(month)s</code> and <code>%(isoweek)s</code>. The rule form lists them all.</p>
+        <img src="screens/date_legend.png" alt="Legend of the date placeholders on the rule form" style="display: block; width: 100%; height: auto; border: 1px solid #e3dde2; border-radius: 8px;"/>
+        <ul style="padding-left: 24px; margin-top: 16px;">
+            <li style="padding: 4px 0;">The date is the day the product was created, in the time zone of the user who created it. It is never today's date, so a reference built in 2026 stays the same when it is rebuilt in 2027.</li>
+            <li style="padding: 4px 0;">With a Running Number, numbering starts again for each date. A category cut to three letters, followed by <code>%(y)s%(month)s</code> and <code>-001</code>, gives <code>Off2609-001</code>, <code>Off2609-002</code>, then <code>Off2610-001</code> the next month.</li>
+            <li style="padding: 4px 0;">A misspelt placeholder, such as <code>%(yeer)s</code>, is refused when the rule is saved. A lone <code>%</code>, as in <code>50%</code>, stays as typed.</li>
+            <li style="padding: 4px 0;">A date ends in digits, so a Running Number next to one needs a separator, just as it does next to a field.</li>
+        </ul>
+    </div>
+
+    <div style="padding: 24px 16px; margin-top: 16px;">
+        <h2 style="color: #3b2a37;">Switch it on</h2>
+        <p>In <strong>Inventory &#8250; Configuration &#8250; Settings &#8250; Products</strong>, tick <strong>Generate Internal References</strong>. New variants then get their reference on creation. After that, the reference follows the fields a rule reads, whether they are edited on the product form or on a single variant. A reference typed by hand is never overwritten automatically. A blank reference is filled the next time one of those fields changes, which covers products created before their rule existed.</p>
+        <img src="screens/settings.png" alt="Inventory settings with Generate Internal References and Freeze References Once Used" style="display: block; max-width: 520px; width: 100%; height: auto; border: 1px solid #e3dde2; border-radius: 8px;"/>
+        <p><strong>Freeze References Once Used</strong> stops automatic rebuilding once a stock move, order or invoice line uses the product. Each rule can override it with <strong>Once Used</strong>.</p>
+    </div>
+
+    <div style="padding: 24px 16px;">
+        <h2 style="color: #3b2a37;">Regenerate existing products</h2>
+        <p>Select products in the product list or kanban and choose <strong>Actions &#8250; Generate Internal Reference</strong>. All their variants appear in one preview. The action also runs from a product's form, from its <strong>Variants</strong> list and from a single variant's form. The preview lists each product's current and new reference, and applies only the lines left ticked. It flags:</p>
+        <ul style="padding-left: 24px;">
+            <li style="padding: 4px 0;"><strong>Duplicate</strong>: another product already holds the new reference, or another line would build it too.</li>
+            <li style="padding: 4px 0;"><strong>Typed</strong>: no code rule built the current reference. It was typed or imported, so the line starts unticked.</li>
+            <li style="padding: 4px 0;"><strong>Used</strong>: a stock move, order, invoice, POS or BoM line already refers to the product. If its rule freezes used references, the line starts unticked.</li>
+            <li style="padding: 4px 0;"><strong>Rule cannot be read</strong>: the rule names a field that no longer exists, so the product is left alone.</li>
+        </ul>
+        <p>A typed reference is replaced only if you tick its line.</p>
+        <img src="screens/preview_wizard.png" alt="Preview of nine products: typed and used references start unticked" style="display: block; max-width: 820px; width: 100%; height: auto; border: 1px solid #e3dde2; border-radius: 8px;"/>
+        <p style="color: #596773; font-size: 14px;">Running numbers are taken when you apply, so they close up over the lines you untick.</p>
+    </div>
+
+    <div style="padding: 24px 16px;">
+        <h2 style="color: #3b2a37;">Reference history</h2>
+        <p><strong>Inventory &#8250; Configuration &#8250; Products &#8250; Reference History</strong> lists every reference a code rule wrote. It shows the reference it replaced, the rule, the user and the date, so a reference printed on an old label can still be traced to the new one. This history is also how the preview tells a typed reference from a generated one.</p>
+        <img src="screens/history.png" alt="Reference History list" style="display: block; width: 100%; height: auto; border: 1px solid #e3dde2; border-radius: 8px;"/>
+        <p style="color: #596773; font-size: 14px;">On upgrade from 20.0.1.0.0, references that still match their rule are recorded as generated. Generated references whose fields have changed since cannot be told from typed ones, so the preview shows them as Typed.</p>
+    </div>
+
+    <div style="padding: 32px; margin-top: 16px; background-color: #f7f5f7; border-radius: 12px;">
+        <h2 style="margin-top: 0; color: #3b2a37;">Get started</h2>
+        <ol style="padding-left: 24px;">
+            <li style="padding: 6px 0;">Install <strong>Product Code Generator</strong> (depends on Inventory).</li>
+            <li style="padding: 6px 0;">Create a code rule and check its <strong>Example</strong>.</li>
+            <li style="padding: 6px 0;">Turn on <strong>Generate Internal References</strong> in Inventory settings.</li>
+            <li style="padding: 6px 0;">For products that already exist, select them in the product list, run <strong>Generate Internal Reference</strong> and review the preview.</li>
+            <li style="padding: 6px 0;">Use the <strong>Duplicate References</strong> filter on the product list to find clashes.</li>
+        </ol>
+        <p style="margin-bottom: 0; color: #596773; font-size: 14px;">Screenshots show demo data in Odoo 20 test databases.</p>
+    </div>
+</section>

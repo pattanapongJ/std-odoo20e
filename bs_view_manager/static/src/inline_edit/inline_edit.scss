@@ -1,0 +1,10 @@
+// Inline editing turned on by an administrator: show which cells can be edited,
+// the way form fields do, when the row is hovered.
+.o_list_table.o_bs_view_manager_inline_edit {
+    tr.o_data_row:not(.o_selected_row):hover {
+        td.o_data_cell:not(.o_readonly_modifier):not(.o_list_button):not(.o_handle_cell) {
+            cursor: text;
+            box-shadow: inset 0 -1px 0 var(--o-input-border-color, var(--border-color));
+        }
+    }
+}

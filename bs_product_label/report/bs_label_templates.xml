@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Everything is laid out with tables and sized in mm and pt: the old
+         WebKit of wkhtmltopdf has no flex or grid, and both PDF engines then
+         place labels to the tenth of a millimetre. -->
+
+    <template id="label_document">
+        <t t-call="web.basic_layout">
+            <!-- Only in the printed document: the preview sits in the backend,
+                 whose page must keep its own margins. -->
+            <style>
+                html, body, .article, .page, .o_body_html { margin: 0 !important; padding: 0 !important; border: 0 !important; max-width: none !important; }
+            </style>
+            <div class="page">
+                <t t-call="bs_product_label.label_pages"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="label_document_zpl"><t t-out="zpl"/></template>
+
+    <!-- The pages: also rendered alone as the preview. -->
+    <template id="label_pages">
+        <div class="o_bs_label_pages">
+            <style t-if="font_css" t-out="font_css"/>
+            <style>
+                .o_bs_label_page { box-sizing: border-box; overflow: hidden; }
+                .o_bs_label_page + .o_bs_label_page { page-break-before: always; break-before: page; }
+                .o_bs_label_page table { border-collapse: collapse; border-spacing: 0; margin: 0; }
+                .o_bs_label_page td { padding: 0; border: 0; }
+                /* Bootstrap's reboot gives tbody, tr and td "border-style: solid"
+                   at width 0, which wkhtmltopdf still draws as a hairline -
+                   tbody included, which the browser adds on its own. */
+                .o_bs_label_pages table, .o_bs_label_pages tbody, .o_bs_label_pages tr, .o_bs_label_pages td {
+                    border: 0 none !important; background: transparent !important; box-shadow: none !important;
+                }
+                .o_bs_label { box-sizing: border-box; overflow: hidden; line-height: 1.15; color: #000; position: relative; font-family: inherit; }
+                .o_bs_label_text, .o_bs_label_price, .o_bs_label_abs { position: absolute; overflow: hidden; }
+                .o_bs_label_name { font-weight: bold; overflow: hidden; word-wrap: break-word; }
+                .o_bs_label_line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                .o_bs_label_price { font-weight: bold; white-space: nowrap; line-height: 1.1; }
+            </style>
+            <t t-foreach="pages" t-as="page">
+                <div class="o_bs_label_page"
+                     t-attf-style="width: {{ '%.2f' % layout['page_width'] }}mm; height: {{ '%.2f' % layout['page_height'] }}mm; padding-top: {{ '%.2f' % layout['margin_top'] }}mm; padding-left: {{ '%.2f' % layout['margin_left'] }}mm;">
+                    <table t-attf-style="width: {{ '%.2f' % layout['grid_width'] }}mm; position: relative; left: {{ '%.2f' % layout['offset_x'] }}mm; top: {{ '%.2f' % layout['offset_y'] }}mm;">
+                        <t t-foreach="page" t-as="row">
+                            <tr t-if="not row_first and layout['gap_y']">
+                                <td t-attf-style="height: {{ '%.2f' % layout['gap_y'] }}mm;"/>
+                            </tr>
+                            <tr>
+                                <t t-foreach="row" t-as="label">
+                                    <td t-if="not label_first and layout['gap_x']"
+                                        t-attf-style="width: {{ '%.2f' % layout['gap_x'] }}mm;"/>
+                                    <td t-attf-style="width: {{ '%.2f' % layout['label_width'] }}mm; height: {{ '%.2f' % layout['label_height'] }}mm; vertical-align: top;">
+                                        <t t-if="label" t-call="bs_product_label.label_body"/>
+                                        <div t-elif="outline"
+                                             t-attf-style="width: {{ '%.2f' % layout['label_width'] }}mm; height: {{ '%.2f' % layout['label_height'] }}mm; box-sizing: border-box; border: 0.2mm dashed #bbb;"/>
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                    </table>
+                </div>
+            </t>
+        </div>
+    </template>
+
+    <!-- One label: the name first and heaviest, then code, variant and any
+         extra lines; the price large at the bottom left; a QR code as tall as
+         the label on the right, or a linear barcode across the bottom with its
+         digits under it for when a scanner fails. Every box is positioned in
+         mm so the text can never push the barcode off the label.
+
+         Projects add content with an xpath on the named divs, and the value
+         with it in bs.label.profile._prepare_label_values. -->
+    <template id="label_body">
+        <t t-set="mm_per_pt" t-value="0.3528"/>
+        <t t-set="is_qr" t-value="label['barcode_src'] and label['barcode_type'] == 'QR'"/>
+        <t t-set="is_linear" t-value="label['barcode_src'] and label['barcode_type'] != 'QR'"/>
+        <t t-set="price_height" t-value="layout['price_pt'] * mm_per_pt * 1.25 if label['price'] else 0"/>
+        <t t-set="text_width" t-value="layout['inner_width'] - (layout['qr_column'] if is_qr else 0)"/>
+        <t t-set="text_height" t-value="layout['inner_height'] - price_height - (layout['linear_block'] if is_linear else 0)"/>
+        <div class="o_bs_label"
+             t-attf-style="width: {{ '%.2f' % layout['label_width'] }}mm; height: {{ '%.2f' % layout['label_height'] }}mm; line-height: {{ label['line_height'] }}; {{ 'outline: 0.2mm dashed #999; outline-offset: -0.2mm;' if outline else '' }}">
+            <div class="o_bs_label_text"
+                 t-attf-style="left: {{ layout['padding'] }}mm; top: {{ layout['padding'] }}mm; width: {{ '%.2f' % text_width }}mm; height: {{ '%.2f' % max(text_height, 0) }}mm;">
+                <div name="header">
+                    <div t-if="label['name_lines']" class="o_bs_label_name"
+                         t-attf-style="font-size: {{ layout['name_pt'] }}pt; height: {{ '%.2f' % (layout['name_pt'] * mm_per_pt * label['line_height'] * label['name_lines']) }}mm; {{ 'white-space: nowrap; text-overflow: ellipsis;' if label['name_lines'] == 1 else '' }}"
+                         t-out="profile._format_label_text(label['name'])"/>
+                </div>
+                <div name="main">
+                    <div t-foreach="label['lines']" t-as="text_line" class="o_bs_label_line"
+                         t-attf-style="font-size: {{ layout[text_line['size']] }}pt;"
+                         t-out="profile._format_label_text(text_line['text'])"/>
+                </div>
+                <div name="extra"/>
+            </div>
+            <div t-if="label['price']" name="price" class="o_bs_label_price"
+                 t-attf-style="left: {{ layout['padding'] }}mm; top: {{ '%.2f' % (layout['label_height'] - layout['padding'] - (layout['linear_block'] if is_linear else 0) - price_height) }}mm; width: {{ '%.2f' % text_width }}mm; font-size: {{ layout['price_pt'] }}pt;"
+                 t-out="profile._format_label_text(label['price'])"/>
+            <img t-if="is_qr" name="barcode" t-att-src="label['barcode_src']" alt=""
+                 class="o_bs_label_abs"
+                 t-attf-style="right: {{ layout['padding'] }}mm; top: {{ layout['padding'] }}mm; width: {{ layout['qr_mm'] }}mm; height: {{ layout['qr_mm'] }}mm;"/>
+            <div t-if="is_linear" name="barcode" class="o_bs_label_abs"
+                 t-attf-style="left: {{ layout['padding'] }}mm; top: {{ '%.2f' % (layout['label_height'] - layout['padding'] - layout['linear_block']) }}mm; width: {{ '%.2f' % layout['inner_width'] }}mm; height: {{ layout['linear_block'] }}mm; text-align: center;">
+                <img t-att-src="label['barcode_src']" alt=""
+                     t-attf-style="display: block; width: {{ '%.2f' % layout['inner_width'] }}mm; height: {{ layout['linear_height'] }}mm;"/>
+                <div class="o_bs_label_line" t-attf-style="font-size: {{ layout['human_pt'] }}pt; letter-spacing: 0.3pt;"
+                     t-out="profile._format_label_text(label['barcode_value'])"/>
+            </div>
+        </div>
+    </template>
+
+</odoo>

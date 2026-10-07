@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="bs_view_manager.ColumnFilter">
+        <div class="o_bs_view_manager_filter d-flex align-items-center" t-att-class="{'o_bs_view_manager_filter_active': this.props.active}">
+            <t t-if="this.kind === 'text'">
+                <AutoComplete class="'flex-grow-1 min-w-0'" value="this.props.active?.display or ''"
+                    sources="this.sources" placeholder="'Search'" resetOnSelect="false">
+                    <t t-set-slot="option" t-slot-scope="option">
+                        <span class="d-flex justify-content-between gap-2">
+                            <span class="text-truncate" t-out="option.label"/>
+                            <span t-if="option.data.count" class="text-muted small" t-out="option.data.count"/>
+                        </span>
+                    </t>
+                </AutoComplete>
+            </t>
+            <input t-elif="this.kind === 'number'" type="text" class="o_input flex-grow-1 min-w-0"
+                placeholder="&gt;, &lt;, =" t-att-value="this.props.active?.display or ''"
+                t-on-keydown="(ev) => this.onNumberKeydown(ev)"/>
+            <button t-elif="this.kind === 'date'" type="button" t-ref="this.dateTargetRef"
+                class="o_input o_bs_view_manager_date_toggle flex-grow-1 min-w-0 text-start text-truncate"
+                t-att-class="{'text-muted': !this.props.active}"
+                t-on-click="() => this.openDatePicker()">
+                <t t-if="this.props.active" t-out="this.props.active.display"/>
+                <t t-else="">Any date</t>
+            </button>
+            <SelectMenu t-elif="this.kind === 'choice'" class="'flex-grow-1 min-w-0'" togglerClass="'o_input text-truncate'"
+                choices="this.choices()" value="this.props.active?.value" searchable="false"
+                placeholder="'All'" onSelect="(value) => this.onChoiceSelect(value)"/>
+            <button t-if="this.props.active" type="button" class="btn btn-link btn-sm p-0 ms-1 text-muted o_bs_view_manager_filter_clear"
+                title="Clear filter" t-on-click="() => this.props.onClear()">
+                <i class="oi" data-icon="close"/>
+            </button>
+        </div>
+    </t>
+
+</templates>

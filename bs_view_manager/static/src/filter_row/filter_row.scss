@@ -1,0 +1,25 @@
+.o_bs_view_manager_filter_row {
+    td {
+        min-width: 0;
+        font-weight: normal;
+    }
+}
+
+.o_bs_view_manager_filter {
+    min-width: 0;
+
+    .o_input {
+        min-width: 0;
+        font-weight: normal;
+    }
+
+    .o_bs_view_manager_date_toggle {
+        background: transparent;
+    }
+}
+
+.o_bs_view_manager_filter_clear {
+    line-height: 1;
+}
+
+

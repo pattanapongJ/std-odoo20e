@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- set_bool rather than a record: the key may already exist in the
+         database, and an insert would fail on the unique index. -->
+    <function model="ir.config_parameter" name="set_bool">
+        <value>bs_generate_product_code.autogenerate</value>
+        <value eval="True"/>
+    </function>
+
+    <!-- Everything below uses stock Odoo fields only. This module adds none of
+         its own, so its demo must not rely on any either. -->
+
+    <record id="attribute_thickness" model="product.attribute">
+        <field name="name">Demo Thickness</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="value_thickness_12" model="product.attribute.value">
+        <field name="name">12 mm</field>
+        <field name="attribute_id" ref="attribute_thickness"/>
+    </record>
+    <record id="value_thickness_18" model="product.attribute.value">
+        <field name="name">18 mm</field>
+        <field name="attribute_id" ref="attribute_thickness"/>
+    </record>
+
+    <record id="attribute_width" model="product.attribute">
+        <field name="name">Demo Width</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="value_width_915" model="product.attribute.value">
+        <field name="name">915 mm</field>
+        <field name="attribute_id" ref="attribute_width"/>
+    </record>
+    <record id="value_width_1220" model="product.attribute.value">
+        <field name="name">1220 mm</field>
+        <field name="attribute_id" ref="attribute_width"/>
+    </record>
+
+    <!-- Category first: the rule's domain refers to it. -->
+    <record id="categ_panels" model="product.category">
+        <field name="name">Demo Panels</field>
+    </record>
+
+    <record id="rule_panels" model="product.code.rule">
+        <field name="name">Demo Panel Codes</field>
+        <field name="sequence">10</field>
+        <field name="product_domain">[('categ_id.name', '=', 'Demo Panels')]</field>
+    </record>
+
+    <!-- "Demo Panels" -> "DEM" -->
+    <record id="rule_panels_line_categ" model="product.code.rule.line">
+        <field name="rule_id" ref="rule_panels"/>
+        <field name="sequence">10</field>
+        <field name="value_type">field</field>
+        <field name="field_path">categ_id.name</field>
+        <field name="transform">truncate</field>
+        <field name="length">3</field>
+        <field name="suffix">-</field>
+    </record>
+    <!-- The attribute values a variant carries, as written: "18 mm", "1220 mm".
+         Digits only keeps the measurements and drops the units. -->
+    <record id="rule_panels_line_values" model="product.code.rule.line">
+        <field name="rule_id" ref="rule_panels"/>
+        <field name="sequence">20</field>
+        <field name="value_type">field</field>
+        <field
+            name="field_path"
+        >product_template_attribute_value_ids.product_attribute_value_id.name</field>
+        <field name="transform">digits</field>
+        <field name="separate_with">/</field>
+    </record>
+
+    <!-- Products last: a product only gets a reference from the rules that
+         already exist when it is created. Products made before a rule are
+         covered by the Generate Internal Reference action instead. -->
+
+    <record id="product_plywood" model="product.template">
+        <field name="name">Demo Plywood Panel</field>
+        <field name="type">consu</field>
+        <field name="list_price">450.0</field>
+        <field name="categ_id" ref="categ_panels"/>
+        <field
+            name="attribute_line_ids"
+            eval="[
+                (0, 0, {'attribute_id': ref('attribute_thickness'), 'sequence': 10,
+                        'value_ids': [(6, 0, [ref('value_thickness_12'),
+                                              ref('value_thickness_18')])]}),
+                (0, 0, {'attribute_id': ref('attribute_width'), 'sequence': 20,
+                        'value_ids': [(6, 0, [ref('value_width_915'),
+                                              ref('value_width_1220')])]}),
+            ]"
+        />
+    </record>
+
+    <!-- No rule matches this one, so its reference is never touched. -->
+    <record id="product_bracket" model="product.product">
+        <field name="name">Demo Steel Bracket</field>
+        <field name="type">consu</field>
+        <field name="list_price">25.0</field>
+        <field name="default_code">BRACKET-001</field>
+    </record>
+
+</odoo>

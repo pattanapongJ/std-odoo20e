@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.ListRenderer" t-inherit-mode="extension">
+        <xpath expr="//tfoot//t[@t-out='this.aggregates[aggFieldName].value']" position="before">
+            <span t-if="this.bsAggregateLabel(column)" class="o_bs_view_manager_aggregate_label"
+                t-out="this.bsAggregateLabel(column)"/>
+        </xpath>
+    </t>
+
+</templates>

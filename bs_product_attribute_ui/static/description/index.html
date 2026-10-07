@@ -1,0 +1,71 @@
+<section class="oe_container" style="max-width: 1080px; margin: 0 auto; color: #243340; font-family: Arial, sans-serif; line-height: 1.6;">
+    <div style="padding: 48px 32px; background-color: #f4f1f4; border-radius: 16px; text-align: center;">
+        <p style="margin: 0 0 12px; color: #714b67; font-weight: 700; letter-spacing: 2px;">ODOO 20 &#183; PRODUCTS</p>
+        <h1 style="margin: 0 0 16px; font-size: 40px; color: #3b2a37;">Product Attribute UI</h1>
+        <p style="margin: 0; font-size: 21px;">Read, filter, show and group product variants by their attributes.</p>
+        <p style="max-width: 720px; margin: 16px auto 0;">Every attribute of a variant on its form, a filter panel of attribute values beside every variant list, and chosen attributes as columns you can group by - without adding a table column per attribute.</p>
+    </div>
+
+    <div class="row" style="margin: 24px 0 0;">
+        <div class="col-md-4" style="padding: 16px;">
+            <h2 style="font-size: 21px; color: #714b67;">Every attribute shown</h2>
+            <p>Core hides attributes that offer a single value; the variant form lists them all, one row each.</p>
+        </div>
+        <div class="col-md-4" style="padding: 16px;">
+            <h2 style="font-size: 21px; color: #714b67;">Filter like a catalogue</h2>
+            <p>Pick Colour and Size in a side panel. "18 mm" is one value across all products, not one per product.</p>
+        </div>
+        <div class="col-md-4" style="padding: 16px;">
+            <h2 style="font-size: 21px; color: #714b67;">Columns and Group By</h2>
+            <p>Mark an attribute Column on Variants to list and group by it. Kept as a property, so no schema change.</p>
+        </div>
+    </div>
+
+    <div style="padding: 24px 16px;">
+        <h2 style="color: #3b2a37;">Every attribute on the variant form</h2>
+        <p>The attribute tags are replaced by one row per attribute: its name on the left, its value on the right.</p>
+        <img src="screens/variant_form.png" alt="Variant form listing Size S and Color White as rows" style="display: block; width: 100%; height: auto; border: 1px solid #e3dde2; border-radius: 8px;"/>
+    </div>
+
+    <div style="padding: 24px 16px;">
+        <h2 style="color: #3b2a37;">Filter variants by attribute value</h2>
+        <p>Every product-variant list gets an <strong>Attributes</strong> panel, one section per attribute, with counts. Tick several values to narrow the list. <strong>Group By &#8250; Attribute Value</strong> groups by value across products.</p>
+        <img src="screens/variant_list_panel.png" alt="Variant list with the Attributes panel showing Color and Size values" style="display: block; width: 100%; height: auto; border: 1px solid #e3dde2; border-radius: 8px;"/>
+        <p style="color: #596773; font-size: 14px;">The panel shows at most 200 values per attribute. Untick <strong>In Filter Panel</strong> on attributes with many values; they can still be searched in the search bar.</p>
+    </div>
+
+    <div style="padding: 24px 16px;">
+        <h2 style="color: #3b2a37;">Show an attribute as a column</h2>
+        <p>On the attribute (<strong>Sales &#8250; Configuration &#8250; Attributes</strong>), tick <strong>Column on Variants</strong>.</p>
+        <img src="screens/attribute_form.png" alt="Attribute form with In Filter Panel and Column on Variants ticked" style="display: block; width: 100%; height: auto; border: 1px solid #e3dde2; border-radius: 8px;"/>
+        <p style="margin-top: 16px;">The attribute then appears as an optional column in every variant list, including <strong>Inventory &#8250; Reporting &#8250; Stock</strong>. With the Columns panel of View Manager it is listed under <strong>Product Variant Properties</strong>; tick it to show it.</p>
+        <img src="screens/attribute_columns.png" alt="Columns panel with the Color property column ticked and shown in the list" style="display: block; width: 100%; height: auto; border: 1px solid #e3dde2; border-radius: 8px;"/>
+    </div>
+
+    <div style="padding: 24px 16px;">
+        <h2 style="color: #3b2a37;">Group by an attribute</h2>
+        <p>Open <strong>Group By &#8250; Attribute Columns</strong> and pick the attribute.</p>
+        <img src="screens/group_by_column.png" alt="Variant list grouped by Color: White, Black, Green and Purple" style="display: block; width: 100%; height: auto; border: 1px solid #e3dde2; border-radius: 8px;"/>
+    </div>
+
+    <div style="padding: 32px; margin-top: 16px; border: 1px solid #e3dde2; border-radius: 12px;">
+        <h2 style="margin-top: 0; color: #3b2a37;">Good to know</h2>
+        <ul style="padding-left: 24px; margin-bottom: 0;">
+            <li style="padding: 4px 0;">Columns are stored in one properties field on the variant. Switching a column on or off rewrites only the variants that carry the attribute; renaming an attribute or value just relabels the column.</li>
+            <li style="padding: 4px 0;">Which columns are shown is remembered per browser, like any optional column.</li>
+            <li style="padding: 4px 0;">An optional <strong>Attribute Summary</strong> column lists a variant's whole combination as text.</li>
+            <li style="padding: 4px 0;">For stock and sales by attribute, install <strong>Product Attribute Report</strong>.</li>
+        </ul>
+    </div>
+
+    <div style="padding: 32px; margin-top: 24px; background-color: #f7f5f7; border-radius: 12px;">
+        <h2 style="margin-top: 0; color: #3b2a37;">Get started</h2>
+        <ol style="padding-left: 24px;">
+            <li style="padding: 6px 0;">Enable <strong>Variants</strong> in Sales or Inventory settings.</li>
+            <li style="padding: 6px 0;">Install <strong>Product Attribute UI</strong>.</li>
+            <li style="padding: 6px 0;">Open a product's <strong>Variants</strong> to use the Attributes panel.</li>
+            <li style="padding: 6px 0;">Tick <strong>Column on Variants</strong> on the attributes you want as columns and Group By entries.</li>
+        </ol>
+        <p style="margin-bottom: 0; color: #596773; font-size: 14px;">Screenshots show demo data in an Odoo 20 test database.</p>
+    </div>
+</section>

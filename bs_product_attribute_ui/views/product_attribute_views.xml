@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_attribute_view_form_search_panel" model="ir.ui.view">
+        <field name="name">product.attribute.form.search.panel</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.product_attribute_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale_main_fields']" position="inside">
+                <field name="show_in_search_panel"/>
+                <field name="variant_column"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="attribute_tree_view_search_panel" model="ir.ui.view">
+        <field name="name">product.attribute.list.search.panel</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.attribute_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_variant']" position="after">
+                <field name="show_in_search_panel" optional="show"/>
+                <field name="variant_column" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

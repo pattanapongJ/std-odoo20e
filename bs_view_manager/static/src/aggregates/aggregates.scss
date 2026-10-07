@@ -1,0 +1,10 @@
+// "Avg", "Min" or "Max" on its own line above a footer total, right-aligned
+// with the value: inline, it would push a narrow column's value out of sight.
+.o_bs_view_manager_aggregate_label {
+    display: block;
+    text-align: end;
+    font-size: 0.75em;
+    line-height: 1;
+    color: var(--secondary-color);
+    text-transform: lowercase;
+}
