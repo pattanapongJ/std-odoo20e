@@ -22,3 +22,8 @@ Remove the replacement when the upstream helper guards clipboard access.
 
 Run the isolated clipboard regression checks with:
 `ODOO_SOURCE=/path/to/odoo node --test bs_web_chatter_position/tests/clipboard_compat.test.mjs`.
+
+The compatibility helper lives under `static/src/compat` so Odoo transpiles its
+ES module imports. The backend bundle lists only `chatter_position.js`; the
+compatibility helper loads exclusively through `web_tour.helpers`. Regression
+checks also execute the real Odoo JS transpiler and its resulting module.
