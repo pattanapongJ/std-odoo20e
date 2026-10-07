@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="bs_label_profile_view_list" model="ir.ui.view">
+        <field name="name">bs.label.profile.list</field>
+        <field name="model">bs.label.profile</field>
+        <field name="arch" type="xml">
+            <list string="Label Profiles">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="output"/>
+                <field name="media"/>
+                <field name="label_width_mm" string="Width"/>
+                <field name="label_height_mm" string="Height"/>
+                <field name="columns"/>
+                <field name="driver_page_size"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="bs_label_profile_view_form" model="ir.ui.view">
+        <field name="name">bs.label.profile.form</field>
+        <field name="model">bs.label.profile</field>
+        <field name="arch" type="xml">
+            <form string="Label Profile">
+                <header>
+                    <button name="action_print_test_page" type="object" string="Print Test Page"
+                            help="A page of outlined sample labels, to line the printer up."/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Shelf label 50 x 30"/></h1>
+                    </div>
+                    <group>
+                        <group string="Paper">
+                            <field name="media" widget="radio" options="{'horizontal': true}"/>
+                            <field name="sheet_size" invisible="media != 'sheet'"/>
+                            <field name="label_width_mm"/>
+                            <field name="label_height_mm"/>
+                            <field name="columns"/>
+                            <field name="rows" invisible="media != 'sheet'"/>
+                            <field name="gap_x_mm"/>
+                            <field name="gap_y_mm" invisible="media != 'sheet'"/>
+                            <field name="margin_top_mm" string="Top Margin (mm)"/>
+                            <field name="margin_bottom_mm" string="Bottom Margin (mm)"/>
+                            <field name="margin_left_mm" string="Left Margin (mm)"/>
+                            <field name="margin_right_mm" string="Right Margin (mm)"/>
+                            <field name="offset_x_mm"/>
+                            <field name="offset_y_mm"/>
+                            <field name="driver_page_size"/>
+                            <field name="labels_per_page" invisible="media != 'sheet'"/>
+                        </group>
+                        <group string="Content">
+                            <field name="show_code"/>
+                            <field name="show_name"/>
+                            <field name="show_variant"/>
+                            <field name="show_price"/>
+                            <field name="pricelist_id" invisible="not show_price"/>
+                            <field name="custom_text"/>
+                            <field name="barcode_source"/>
+                            <field name="barcode_type" invisible="barcode_source == 'none'"/>
+                        </group>
+                        <group string="Output">
+                            <field name="output" widget="radio"/>
+                            <field name="zpl_dpi" invisible="output != 'zpl'"/>
+                            <div colspan="2" class="text-muted small" invisible="output != 'zpl'">
+                                ZPL prints with the printer's own font, which has Latin letters only.
+                                Use PDF for names in other scripts.
+                            </div>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <separator string="Preview"/>
+                    <div class="text-muted small mb-2">
+                        Sample product, drawn by the browser at actual size. The PDF engine's fonts
+                        may differ slightly: print a test page to check on paper.
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <field name="preview_html" readonly="1" nolabel="1"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bs_label_profile" model="ir.actions.act_window">
+        <field name="name">Label Profiles</field>
+        <field name="res_model">bs.label.profile</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Set up a label</p>
+            <p>A profile is the paper a label goes on and what it shows.</p>
+        </field>
+    </record>
+
+</odoo>

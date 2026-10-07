@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="bs_label_print_wizard_view_form" model="ir.ui.view">
+        <field name="name">bs.label.print.wizard.form</field>
+        <field name="model">bs.label.print.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Print Labels">
+                <group>
+                    <group>
+                        <field name="profile_id" options="{'no_create': True}"/>
+                        <field name="show_price" invisible="1"/>
+                        <field name="pricelist_id" invisible="not show_price" options="{'no_create': True}"
+                               placeholder="Sales price"/>
+                    </group>
+                    <group>
+                        <field name="label_count" string="Labels"/>
+                        <field name="page_count" string="Pages"/>
+                    </group>
+                </group>
+                <field name="line_ids" nolabel="1">
+                    <list editable="bottom">
+                        <field name="sequence" widget="handle"/>
+                        <field name="product_id" options="{'no_create': True}"/>
+                        <field name="quantity"/>
+                        <field name="extra_text" optional="show"/>
+                        <field name="source" optional="show"/>
+                    </list>
+                </field>
+                <div class="text-muted small mt-3 mb-1">Preview of the first page</div>
+                <div style="overflow-x: auto;">
+                    <field name="preview_html" readonly="1" nolabel="1"/>
+                </div>
+                <footer>
+                    <button name="action_print" type="object" string="Print" class="btn-primary"
+                            data-hotkey="q"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Common stock, to copy and adjust. -->
+    <record id="profile_roll_50x30" model="bs.label.profile">
+        <field name="name">Roll 50 x 30 mm</field>
+        <field name="sequence">10</field>
+        <field name="media">roll</field>
+        <field name="label_width_mm">50</field>
+        <field name="label_height_mm">30</field>
+        <field name="columns">1</field>
+    </record>
+
+    <record id="profile_roll_50x30_2up" model="bs.label.profile">
+        <field name="name">Roll 2 x 50 x 30 mm (101.6 mm liner)</field>
+        <field name="sequence">20</field>
+        <field name="media">roll</field>
+        <field name="label_width_mm">50</field>
+        <field name="label_height_mm">30</field>
+        <field name="columns">2</field>
+        <field name="gap_x_mm">1.6</field>
+    </record>
+
+    <record id="profile_sheet_a4_3x8" model="bs.label.profile">
+        <field name="name">A4 sheet 3 x 8 (70 x 37 mm)</field>
+        <field name="sequence">30</field>
+        <field name="media">sheet</field>
+        <field name="sheet_size">A4</field>
+        <field name="label_width_mm">70</field>
+        <field name="label_height_mm">37</field>
+        <field name="columns">3</field>
+        <field name="rows">8</field>
+        <field name="margin_top_mm">0.5</field>
+    </record>
+
+</odoo>

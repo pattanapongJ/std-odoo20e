@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="bs_label_print_wizard_view_form" model="ir.ui.view">
+        <field name="name">bs.label.print.wizard.form.stock</field>
+        <field name="model">bs.label.print.wizard</field>
+        <field name="inherit_id" ref="bs_product_label.bs_label_print_wizard_view_form"/>
+        <field name="arch" type="xml">
+            <field name="line_ids" position="before">
+                <field name="has_tracked_line" invisible="1"/>
+            </field>
+            <xpath expr="//field[@name='line_ids']/list/field[@name='quantity']" position="before">
+                <field name="tracking" column_invisible="1"/>
+                <!-- Only products tracked by lot or serial take a lot. -->
+                <field name="lot_id" options="{'no_create': True}"
+                       readonly="not tracking"
+                       column_invisible="not parent.has_tracked_line"
+                       groups="stock.group_production_lot"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
