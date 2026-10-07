@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inventory > Configuration > Settings > Products -->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form.product.code</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='product_setting_container']" position="inside">
+                <setting id="product_code_generator"
+                         string="Generate Internal References"
+                         help="Build a product's internal reference from its fields, following the code rules you define">
+                    <field name="product_code_autogenerate"/>
+                    <div class="mt8" invisible="not product_code_autogenerate">
+                        <div class="d-flex gap-2 mb-2">
+                            <field name="product_code_freeze_used"/>
+                            <div>
+                                <label for="product_code_freeze_used" class="o_light_label"/>
+                                <div class="text-muted">
+                                    Keep a reference unchanged once a stock move,
+                                    order or invoice line uses the product. Each
+                                    rule can override this.
+                                </div>
+                            </div>
+                        </div>
+                        <button name="%(action_product_code_rule)d" type="action"
+                                string="Product Code Rules" class="btn-link" icon="arrow_forward"/>
+                        <div class="text-muted">
+                            A rule says which products it covers, then lists the parts
+                            of their reference in order: a product field, fixed text or
+                            a running number - each with its own prefix, suffix and
+                            formatting. The first matching rule wins.
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
