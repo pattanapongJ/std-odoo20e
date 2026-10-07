@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.ListRenderer" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_optional_columns')]" position="attributes">
+            <attribute name="t-if">!this.bsIsViewManagerEnabled() and (this.displayOptionalFields or this.hasOptionalOpenFormViewColumn)</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_optional_columns')]" position="after">
+            <div t-if="this.bsIsViewManagerEnabled()" class="o_bs_view_manager d-print-none text-center">
+                <t t-component="this.bsPanelComponent()"
+                    inlineEditing="this.bsIsInlineEditing()"
+                    resModel="this.props.list.resModel"
+                    actionId="this.env.config.actionId"
+                    viewId="this.env.config.viewId"
+                    activeColumnNames="this.bsActiveColumnNames()"
+                    propertyGroups="this.bsPropertyColumnGroups()"
+                    onTogglePropertyColumn="(name) => this.toggleOptionalField(name)"
+                    getWidths="() => this.bsGetWidths()"/>
+            </div>
+        </xpath>
+        <xpath expr="//table[@t-ref='this.tableRef']" position="attributes">
+            <attribute name="t-att-class">this.bsTableClass()</attribute>
+            <attribute name="t-att-style">this.bsTableStyle()</attribute>
+        </xpath>
+    </t>
+
+</templates>

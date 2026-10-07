@@ -1,0 +1,37 @@
+// Spreadsheet-like row numbers in the selector column: the number shows until the
+// row is hovered or selected, then the checkbox takes its place.
+.o_list_table.o_bs_view_manager_row_numbers {
+    tbody {
+        counter-reset: bs-view-manager-row var(--bs-view-manager__row-offset, 0);
+    }
+
+    tr.o_data_row {
+        counter-increment: bs-view-manager-row;
+
+        td.o_list_record_selector {
+            text-align: center;
+
+            &::before {
+                content: counter(bs-view-manager-row);
+                font-size: 0.85em;
+                font-variant-numeric: tabular-nums;
+                color: var(--secondary-color);
+            }
+        }
+
+        &:hover td.o_list_record_selector::before,
+        &.o_data_row_selected td.o_list_record_selector::before {
+            display: none;
+        }
+    }
+
+    &.o_bs_view_manager_has_selection tr.o_data_row td.o_list_record_selector::before {
+        display: none;
+    }
+
+    &:not(.o_bs_view_manager_has_selection) tr.o_data_row:not(:hover):not(.o_data_row_selected) {
+        td.o_list_record_selector .o-checkbox {
+            display: none;
+        }
+    }
+}

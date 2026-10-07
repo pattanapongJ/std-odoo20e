@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="bs_view_manager.ColumnsList">
+        <ul class="o_bs_view_manager_list list-unstyled mb-2" t-ref="this.listRef">
+            <li t-foreach="this.props.columns" t-as="column" t-key="column.name"
+                class="o_bs_view_manager_column d-flex align-items-center gap-2 py-1" t-att-data-name="column.name">
+                <span class="o_bs_view_manager_handle oi text-muted" data-icon="drag_indicator" title="Drag to reorder"/>
+                <CheckBox value="column.visible" onChange="(value) => column.visible = value"/>
+                <input class="o_input o_bs_view_manager_label flex-grow-1" t-att-value="column.label"
+                    t-att-title="column.default_label"
+                    t-on-input="(ev) => column.label = ev.target.value"/>
+                <select t-if="column.visible and this.isAggregatable(column)" class="o_input o_bs_view_manager_aggregate"
+                    title="Total shown under the column"
+                    t-on-change="(ev) => column.aggregate = ev.target.value">
+                    <option value="" t-att-selected="!column.aggregate">No total</option>
+                    <option value="sum" t-att-selected="column.aggregate === 'sum'">Sum</option>
+                    <option value="avg" t-att-selected="column.aggregate === 'avg'">Average</option>
+                    <option value="min" t-att-selected="column.aggregate === 'min'">Min</option>
+                    <option value="max" t-att-selected="column.aggregate === 'max'">Max</option>
+                </select>
+            </li>
+        </ul>
+    </t>
+
+    <t t-name="bs_view_manager.ColumnsPanel">
+        <Dropdown position="'bottom-end'" menuClass="'o_bs_view_manager_panel'" beforeOpen="() => this.load()">
+            <button class="btn p-0" tabindex="-1"
+                t-att-title="this.toggleTitle()">
+                <i class="oi oi-fw" data-icon="tune"/>
+            </button>
+            <t t-set-slot="content">
+                <div class="o_bs_view_manager_body px-3 py-2" t-on-click.stop="">
+                    <div class="d-flex align-items-baseline justify-content-between mb-2">
+                        <span class="fw-bold">Columns</span>
+                        <span t-if="this.state.loaded" class="small text-muted" t-out="this.sourceText()"/>
+                    </div>
+                    <div t-if="!this.state.loaded" class="text-muted">Loading...</div>
+                    <t t-else="">
+                        <BsColumnsList columns="this.state.columns"
+                            onMove="(name, previousName) => this.move(name, previousName)"/>
+                        <div t-foreach="this.props.propertyGroups" t-as="group" t-key="group.id"
+                            class="o_bs_view_manager_properties mb-2">
+                            <div class="small text-muted mb-1" t-out="group.displayName"/>
+                            <CheckBox t-foreach="group.optionalFields" t-as="field" t-key="field.name"
+                                value="field.value"
+                                onChange="() => this.props.onTogglePropertyColumn(field.name)">
+                                <t t-out="field.label"/>
+                            </CheckBox>
+                        </div>
+                        <div t-if="this.state.addable.length" class="o_bs_view_manager_add mb-2">
+                            <input type="text" class="o_input" placeholder="Add a column..."
+                                t-att-value="this.state.addQuery"
+                                t-on-input="(ev) => this.state.addQuery = ev.target.value"
+                                t-on-keydown="(ev) => this.onAddQueryKeydown(ev)"/>
+                            <t t-if="this.state.addQuery.trim()">
+                                <ul t-if="this.addableMatches().length" class="list-unstyled mb-0 mt-1">
+                                    <li t-foreach="this.addableMatches()" t-as="field" t-key="field.name">
+                                        <button type="button" class="o_bs_view_manager_add_option btn btn-link w-100 text-start px-1 py-1"
+                                            t-on-click="() => this.pickField(field.name)">
+                                            <span t-out="field.label"/>
+                                            <span class="text-muted small ms-1" t-out="field.name"/>
+                                        </button>
+                                    </li>
+                                </ul>
+                                <div t-else="" class="text-muted small mt-1 px-1">No matching field</div>
+                            </t>
+                        </div>
+                        <!-- sticky: Save stays in sight while a long column list scrolls -->
+                        <div class="o_bs_view_manager_footer">
+                            <CheckBox value="this.state.showFilterRow"
+                                onChange="(value) => this.state.showFilterRow = value">Show filter row</CheckBox>
+                            <CheckBox value="this.state.showRowNumbers"
+                                onChange="(value) => this.state.showRowNumbers = value">Show row numbers</CheckBox>
+                            <CheckBox value="this.state.keepWidths"
+                                onChange="(value) => this.state.keepWidths = value">Keep current column widths</CheckBox>
+                            <div class="d-flex align-items-center gap-2 mt-2">
+                                <button class="btn btn-primary btn-sm" t-att-disabled="this.state.saving"
+                                    t-on-click="() => this.save()">Save</button>
+                                <button t-if="this.state.source === 'personal'" class="btn btn-link btn-sm"
+                                    t-att-disabled="this.state.saving" t-on-click="() => this.reset()">
+                                    <t t-if="this.state.teamApplies">Use team layout</t>
+                                    <t t-else="">Reset to default</t>
+                                </button>
+                            </div>
+                        </div>
+                        <div t-if="this.state.canShare" class="o_bs_view_manager_admin border-top mt-3 pt-2">
+                            <button type="button" class="btn btn-link btn-sm p-0 text-muted"
+                                t-on-click="() => this.state.showAdmin = !this.state.showAdmin">
+                                <t t-if="this.state.showAdmin">Hide admin settings</t>
+                                <t t-else="">Admin settings</t>
+                            </button>
+                            <t t-if="this.state.showAdmin">
+                                <div class="mt-2">
+                                    <CheckBox value="this.state.inlineEdit" disabled="this.state.saving"
+                                        onChange="(value) => this.setInlineEdit(value)">Edit rows inline, for everyone</CheckBox>
+                                </div>
+
+                                <div class="small fw-bold mt-3 mb-1">Team layout</div>
+                                <div class="small text-muted mb-1">Share the columns above as the default of these groups, or of everyone if empty.</div>
+                                <MultiRecordSelector resModel="'res.groups'" resIds="this.state.teamGroupIds"
+                                    update="(ids) => this.state.teamGroupIds = ids" placeholder="'All internal users'"/>
+                                <div class="d-flex align-items-center gap-2 mt-2">
+                                    <button class="btn btn-secondary btn-sm" t-att-disabled="this.state.saving"
+                                        t-on-click="() => this.share()">Save as team layout</button>
+                                    <button t-if="this.state.teamApplies" class="btn btn-link btn-sm text-danger"
+                                        t-att-disabled="this.state.saving" t-on-click="() => this.unshare()">Remove team layout</button>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

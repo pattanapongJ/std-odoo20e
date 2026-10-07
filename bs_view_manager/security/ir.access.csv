@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+bs_view_layout_access_user,bs.view.layout.access.user,bs.view.layout,base.group_user,crud,"[('user_id', '=', user.id)]"
+bs_view_layout_access_user_team,bs.view.layout.access.user.team,bs.view.layout,base.group_user,r,"[('user_id', '=', False), '|', ('group_ids', '=', False), ('group_ids', 'in', user.all_group_ids.ids)]"
+bs_view_layout_access_system_team,bs.view.layout.access.system.team,bs.view.layout,base.group_system,crud,"[('user_id', '=', False)]"

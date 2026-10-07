@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.ListRenderer" t-inherit-mode="extension">
+        <!-- td, not th: the column width hook measures every "thead th" as a header -->
+        <xpath expr="//thead" position="inside">
+            <tr t-if="this.bsShowFilterRow()" class="o_bs_view_manager_filter_row">
+                <td t-if="this.hasSelectors"/>
+                <t t-foreach="this.columns" t-as="column" t-key="column.id">
+                    <td class="o_bs_view_manager_filter_cell p-1">
+                        <t t-if="this.bsFilterKind(column)">
+                            <t t-component="this.bsFilterComponent()"
+                                resModel="this.props.list.resModel"
+                                fieldName="column.name"
+                                field="this.props.list.fields[column.name]"
+                                label="column.label or this.props.list.fields[column.name].string"
+                                active="this.bsActiveFilterProps(column)"
+                                getSuggestionDomain="() => this.bsSuggestionDomain(column)"
+                                onApply="(filter) => this.bsApplyColumnFilter(column, filter)"
+                                onClear="() => this.bsClearColumnFilter(column)"/>
+                        </t>
+                    </td>
+                </t>
+                <td t-if="this.hasOpenFormViewColumn"/>
+                <td t-if="this.hasActionsColumn"/>
+            </tr>
+        </xpath>
+    </t>
+
+</templates>
