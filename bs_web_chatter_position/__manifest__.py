@@ -1,6 +1,6 @@
 {
     'name': 'Chatter Position',
-    'version': '20.0.1.0.1',
+    'version': '20.0.1.0.2',
     'category': 'Productivity/Discuss',
     'summary': 'Each user chooses whether the chatter sits beside or below forms',
     'description': """
@@ -20,10 +20,10 @@ Adds a Chatter Position preference (My Preferences):
         'web_tour.helpers': [
             ('replace',
              'web_tour/static/src/tour_helpers/tour_helpers_clipboard.js',
-             'bs_web_chatter_position/static/compat/tour_helpers_clipboard.js'),
+             'bs_web_chatter_position/static/src/compat/tour_helpers_clipboard.js'),
         ],
         'web.assets_backend': [
-            'bs_web_chatter_position/static/src/**/*',
+            'bs_web_chatter_position/static/src/chatter_position.js',
         ],
         'web.assets_tests': [
             'bs_web_chatter_position/static/tests/tours/*',
