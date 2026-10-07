@@ -1,0 +1,61 @@
+<section class="oe_container" style="max-width: 1080px; margin: 0 auto; color: #243340; font-family: Arial, sans-serif; line-height: 1.6;">
+    <div style="padding: 48px 32px; background-color: #f4f1f4; border-radius: 16px; text-align: center;">
+        <p style="margin: 0 0 12px; color: #714b67; font-weight: 700; letter-spacing: 2px;">ODOO 20 &#183; INVENTORY &amp; SALES REPORTING</p>
+        <h1 style="margin: 0 0 16px; font-size: 40px; color: #3b2a37;">Product Attribute Report</h1>
+        <p style="margin: 0; font-size: 21px;">Stock on hand and quantity sold, by attribute value.</p>
+        <p style="max-width: 720px; margin: 16px auto 0;">See which colours, sizes or thicknesses are in stock and which ones sell - across every product that uses them.</p>
+    </div>
+
+    <div class="row" style="margin: 24px 0 0;">
+        <div class="col-md-4" style="padding: 16px;">
+            <h2 style="font-size: 21px; color: #714b67;">One attribute at a time</h2>
+            <p>Pick an attribute on the left; its values become the rows of the pivot.</p>
+        </div>
+        <div class="col-md-4" style="padding: 16px;">
+            <h2 style="font-size: 21px; color: #714b67;">Two measures</h2>
+            <p>On Hand from internal locations, Qty Sold from confirmed sales orders, in the product's own unit.</p>
+        </div>
+        <div class="col-md-4" style="padding: 16px;">
+            <h2 style="font-size: 21px; color: #714b67;">Any attribute</h2>
+            <p>New attributes appear on their own. Nothing to configure, no column per attribute.</p>
+        </div>
+    </div>
+
+    <div style="padding: 24px 16px;">
+        <h2 style="color: #3b2a37;">Stock and sales by value</h2>
+        <p>Open <strong>Inventory &#8250; Reporting</strong> or <strong>Sales &#8250; Reporting &#8250; Stock and Sales by Attribute</strong>. The report opens on the first attribute with data; choose another in the <strong>Attribute</strong> panel.</p>
+        <img src="screens/pivot.png" alt="Pivot of On Hand and Qty Sold for the Color values White, Black and Rose Beige" style="display: block; width: 100%; height: auto; border: 1px solid #e3dde2; border-radius: 8px;"/>
+        <p style="color: #596773; font-size: 14px;">Expand rows or columns by Product, Product Category, Warehouse or Order Date. The graph view shows the same data as bars.</p>
+    </div>
+
+    <div style="padding: 24px 16px;">
+        <h2 style="color: #3b2a37;">See what is behind a number</h2>
+        <p>Click a cell to list the variants and orders behind it, with totals.</p>
+        <img src="screens/drilldown.png" alt="List of the White variants with their stock and sold quantities" style="display: block; width: 100%; height: auto; border: 1px solid #e3dde2; border-radius: 8px;"/>
+    </div>
+
+    <div style="padding: 32px; margin-top: 16px; border: 1px solid #e3dde2; border-radius: 12px;">
+        <h2 style="margin-top: 0; color: #3b2a37;">Reading the totals</h2>
+        <div class="table-responsive">
+            <table class="table" style="width: 100%;">
+                <thead><tr><th>Measure</th><th>Counts</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>On Hand</strong></td><td>Quantities in internal locations now, per warehouse.</td></tr>
+                    <tr><td><strong>Qty Sold</strong></td><td>Confirmed sales order lines, converted to the product's unit, dated by order date. Quotations, cancelled orders, notes and down payments are left out.</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p>A variant counts once under each of its attributes, so totals hold within one attribute. The <strong>All</strong> entry of the panel adds them up across attributes and is not a stock total.</p>
+        <p style="margin-bottom: 0;">The <strong>Sold in the Last 30 / 90 Days / 12 Months</strong> filters narrow the sales period and keep the stock rows.</p>
+    </div>
+
+    <div style="padding: 32px; margin-top: 24px; background-color: #f7f5f7; border-radius: 12px;">
+        <h2 style="margin-top: 0; color: #3b2a37;">Get started</h2>
+        <ol style="padding-left: 24px;">
+            <li style="padding: 6px 0;">Install <strong>Product Attribute Report</strong> (depends on Product Attribute UI, Sales and Inventory).</li>
+            <li style="padding: 6px 0;">Open <strong>Stock and Sales by Attribute</strong> from Inventory or Sales reporting. The menu is shown to managers of those apps.</li>
+            <li style="padding: 6px 0;">Pick an attribute, then expand or click cells to explore.</li>
+        </ol>
+        <p style="margin-bottom: 0; color: #596773; font-size: 14px;">Point of Sale orders are not included. Screenshots show demo data in an Odoo 20 test database.</p>
+    </div>
+</section>

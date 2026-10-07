@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form: one row per attribute instead of a run of tags.
+
+         The core field is hidden rather than replaced, so the xpaths other
+         modules aim at it keep resolving. Ours reads
+         product_template_attribute_value_ids rather than the variant values
+         core shows: those are filtered to attribute lines with more than one
+         value, which drops an attribute the moment a product is left with a
+         single value for it. -->
+    <record id="product_normal_form_view_attribute_rows" model="ir.ui.view">
+        <field name="name">product.product.form.attribute.rows</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_template_variant_value_ids']"
+                   position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_template_variant_value_ids']"
+                   position="after">
+                <field name="product_template_attribute_value_ids"
+                       widget="product_attribute_rows"
+                       invisible="not product_template_attribute_value_ids"
+                       nolabel="1"
+                       colspan="2"
+                       readonly="1"
+                       groups="product.group_product_variant"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- List: the whole combination as text, hidden until asked for. Core's
+         tags leave single-value lines out; this column does not. -->
+    <record id="product_product_tree_view_attribute_summary" model="ir.ui.view">
+        <field name="name">product.product.list.attribute.summary</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="product_template_variant_value_ids" position="after">
+                <field name="attribute_summary" optional="hide"
+                       groups="product.group_product_variant"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Search: grouping by value across templates. The panel itself is added
+         in ProductProduct._get_view, since several variant search views need
+         it and some already carry a panel of their own. -->
+    <record id="product_search_form_view_attributes" model="ir.ui.view">
+        <field name="name">product.product.search.attributes</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_search_form_view"/>
+        <field name="arch" type="xml">
+            <filter name="group_by_product_tmpl_id" position="after">
+                <!-- product_attribute_value_ids rather than the template's own
+                     values, so "18 mm" is one group and not one per product. -->
+                <filter string="Attribute Value" name="group_by_attribute_value"
+                        context="{'group_by': 'product_attribute_value_ids'}"
+                        groups="product.group_product_variant"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>
