@@ -13,3 +13,12 @@ How: the value is sent in `session_info`; JS patches `FormRenderer.mailLayout`, 
 
 Tests include two tours (side at 1366px, bottom at 1920px). Tours need `websocket-client` in the venv and
 `ODOO_BROWSER_BIN` pointing at a Chrome/Chromium when none is on PATH.
+
+Odoo 20 compatibility: replaces the tour clipboard helper in `web_tour.helpers` to
+avoid an import-time crash when HTTP provides no `navigator.clipboard`. The helper
+keeps its mock/restore behavior on HTTPS and does nothing when the API is absent.
+This does not enable clipboard features on HTTP or remove the secure-context warning.
+Remove the replacement when the upstream helper guards clipboard access.
+
+Run the isolated clipboard regression checks with:
+`ODOO_SOURCE=/path/to/odoo node --test bs_web_chatter_position/tests/clipboard_compat.test.mjs`.

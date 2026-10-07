@@ -1,6 +1,6 @@
 {
     'name': 'Chatter Position',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'category': 'Productivity/Discuss',
     'summary': 'Each user chooses whether the chatter sits beside or below forms',
     'description': """
@@ -12,11 +12,16 @@ Adds a Chatter Position preference (My Preferences):
     """,
     'author': 'Basic Solution Co., Ltd.',
     'website': 'https://www.basic-solution.com',
-    'depends': ['mail'],
+    'depends': ['mail', 'web_tour'],
     'data': [
         'views/res_users_views.xml',
     ],
     'assets': {
+        'web_tour.helpers': [
+            ('replace',
+             'web_tour/static/src/tour_helpers/tour_helpers_clipboard.js',
+             'bs_web_chatter_position/static/compat/tour_helpers_clipboard.js'),
+        ],
         'web.assets_backend': [
             'bs_web_chatter_position/static/src/**/*',
         ],
